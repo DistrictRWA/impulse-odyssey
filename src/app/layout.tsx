@@ -10,42 +10,42 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+      </head>
       <body>
-        {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-stone-200">
-          <div className="max-w-screen-xl mx-auto px-8 h-14 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-50" style={{background:'rgba(255,255,255,0.92)', backdropFilter:'blur(8px)', borderBottom:'1px solid #e8e2d9'}}>
+          <div style={{maxWidth:1280}} className="mx-auto px-8 h-14 flex items-center justify-between">
             <nav className="hidden md:flex items-center gap-8">
-              <Link href="/blog" className="eyebrow hover:text-stone-600 transition-colors">Blog</Link>
-              <Link href="/about" className="eyebrow hover:text-stone-600 transition-colors">About</Link>
+              <Link href="/blog" className="eyebrow text-stone-500 hover:text-red-700 transition-colors">Blog</Link>
+              <Link href="/about" className="eyebrow text-stone-500 hover:text-red-700 transition-colors">About</Link>
             </nav>
             <Link href="/" className="absolute left-1/2 -translate-x-1/2">
-              <span className="serif text-2xl font-bold tracking-tight" style={{color:'#1a1714'}}>
+              <span className="serif" style={{fontSize:'1.5rem', fontWeight:600, color:'#1a1714', letterSpacing:'-0.01em'}}>
                 Impulse Odyssey
               </span>
             </Link>
-            <div className="hidden md:flex items-center gap-4">
-              <span className="eyebrow text-stone-400">54 countries · 6 continents</span>
-            </div>
+            <span className="hidden md:block eyebrow text-stone-400">54 countries · 6 continents</span>
           </div>
         </header>
 
-        <main className="pt-14">{children}</main>
+        <main style={{paddingTop:56}}>{children}</main>
 
-        {/* Footer */}
-        <footer style={{background:'#1a1714'}} className="text-stone-400 mt-24">
-          <div className="max-w-screen-xl mx-auto px-8 py-16">
-            <div className="text-center mb-12">
-              <p className="serif text-4xl text-white font-light italic mb-3">Impulse Odyssey</p>
-              <p className="eyebrow text-stone-500">Spontaneous Global Adventure</p>
+        <footer style={{background:'#1a1714', marginTop:80}}>
+          <div style={{maxWidth:1280}} className="mx-auto px-8 py-16">
+            <div className="text-center mb-10">
+              <p className="serif text-white" style={{fontSize:'2.5rem', fontWeight:300, fontStyle:'italic'}}>Impulse Odyssey</p>
+              <p className="eyebrow mt-2" style={{color:'#6b6560'}}>Spontaneous Global Adventure</p>
             </div>
-            <hr className="rule opacity-20 mb-10" />
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div style={{borderTop:'1px solid #2d2926'}} className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex gap-8">
                 {[['/', 'Home'], ['/blog', 'Blog'], ['/about', 'About']].map(([h, l]) => (
-                  <Link key={h} href={h} className="eyebrow text-stone-500 hover:text-red-400 transition-colors">{l}</Link>
+                  <Link key={h} href={h} className="eyebrow hover:text-red-400 transition-colors" style={{color:'#6b6560'}}>{l}</Link>
                 ))}
               </div>
-              <p className="text-xs text-stone-600">© Impulse Odyssey {new Date().getFullYear()}</p>
+              <p style={{fontSize:'0.7rem', color:'#4a4540'}}>© Impulse Odyssey {new Date().getFullYear()}</p>
             </div>
           </div>
         </footer>

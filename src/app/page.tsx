@@ -1,6 +1,41 @@
 import Link from 'next/link'
+import { CardLink } from '@/components/CardLink'
 import Image from 'next/image'
 import { getAllPosts, formatDate, getExcerpt } from '@/lib/posts'
+
+const S = {
+  page: { background: '#f9f6f0', minHeight: '100vh' },
+  hero: { position: 'relative' as const, height: '90vh', minHeight: 580, background: '#1a1714', overflow: 'hidden' },
+  heroOverlay: { position: 'absolute' as const, inset: 0, background: 'linear-gradient(to top, rgba(26,23,20,0.95) 0%, rgba(26,23,20,0.15) 65%, transparent 100%)' },
+  heroContent: { position: 'absolute' as const, bottom: 0, left: 0, right: 0, padding: '0 64px 72px', maxWidth: 1280, margin: '0 auto' },
+  eyebrow: { fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' as const },
+  heroTitle: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 300, color: '#fff', lineHeight: 1.1, marginBottom: '1.5rem', maxWidth: 900 },
+  heroBtn: { display: 'inline-block', background: '#fff', color: '#1a1714', fontWeight: 600, fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '14px 32px', textDecoration: 'none', transition: 'all 0.2s' },
+  section: { maxWidth: 1280, margin: '0 auto', padding: '72px 64px' },
+  sectionAlt: { background: '#f0ebe0', padding: '72px 0' },
+  sectionAltInner: { maxWidth: 1280, margin: '0 auto', padding: '0 64px' },
+  divider: { display: 'flex', alignItems: 'center', gap: 16, marginBottom: 48 },
+  dividerLine: { flex: 1, height: 1, background: '#ddd6c8' },
+  dividerText: { fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: '#c8392b' },
+  card: { background: '#fff', borderRadius: 4, overflow: 'hidden', transition: 'box-shadow 0.3s, transform 0.3s', cursor: 'pointer', textDecoration: 'none', display: 'block' },
+  grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 24 },
+  grid3: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 },
+  cardImg: { position: 'relative' as const, height: 280, background: '#ccc4b8', overflow: 'hidden' },
+  cardImgSm: { position: 'relative' as const, height: 220, background: '#ccc4b8', overflow: 'hidden' },
+  cardBody: { padding: '24px' },
+  cardEye: { fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: '#c8392b', marginBottom: 8 },
+  cardTitle: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.4rem', fontWeight: 400, color: '#1a1714', lineHeight: 1.3, marginBottom: 12 },
+  cardTitleSm: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.2rem', fontWeight: 400, color: '#1a1714', lineHeight: 1.3, marginBottom: 8 },
+  cardExcerpt: { fontSize: '0.85rem', color: '#6b6560', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const, overflow: 'hidden' },
+  cardDate: { fontSize: '0.7rem', color: '#9a9490', marginTop: 12 },
+  imgOverlay: { position: 'absolute' as const, inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)' },
+  quote: { background: '#1a1714', padding: '96px 64px', textAlign: 'center' as const },
+  quoteText: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', fontWeight: 300, fontStyle: 'italic', color: '#f9f6f0', lineHeight: 1.3, maxWidth: 900, margin: '0 auto' },
+  catRow: { display: 'flex', flexWrap: 'wrap' as const, gap: 10, marginTop: 32 },
+  catBtn: { fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '10px 20px', border: '1px solid #c8b99a', color: '#6b6560', textDecoration: 'none', transition: 'all 0.2s' },
+  viewAll: { display: 'block', textAlign: 'center' as const, marginTop: 48 },
+  viewAllBtn: { display: 'inline-block', border: '1px solid #1a1714', color: '#1a1714', fontWeight: 600, fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '14px 40px', textDecoration: 'none' },
+}
 
 export default function HomePage() {
   const posts = getAllPosts()
@@ -9,136 +44,113 @@ export default function HomePage() {
   const grid = rest.slice(0, 6)
 
   return (
-    <div>
-      {/* ─── FULL-BLEED HERO ─────────────────────────── */}
-      <section className="relative h-screen max-h-[90vh] min-h-[600px] bg-stone-900">
+    <div style={S.page}>
+      {/* HERO */}
+      <section style={S.hero}>
         {hero?.coverImage && (
-          <Image src={hero.coverImage} alt={hero.title} fill priority
-            className="object-cover" style={{opacity: 0.55}} sizes="100vw" />
+          <Image src={hero.coverImage} alt={hero.title} fill priority sizes="100vw"
+            style={{objectFit:'cover', opacity:0.55}} />
         )}
-        {/* Gradient */}
-        <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(26,23,20,0.95) 0%, rgba(26,23,20,0.2) 60%, transparent 100%)'}} />
-
-        {/* Top rule */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-white/20" />
-
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col justify-end pb-16 px-8 md:px-16 max-w-screen-xl mx-auto w-full left-0 right-0">
-          <p className="eyebrow text-red-400 mb-4">Latest Story</p>
-          <h1 className="serif text-5xl md:text-7xl font-light text-white leading-[1.1] max-w-4xl mb-6" style={{letterSpacing: '-0.01em'}}>
-            {hero?.title}
-          </h1>
-          <div className="flex items-center gap-6">
-            <Link href={`/blog/${hero?.slug}`}
-              className="inline-block bg-white text-stone-900 font-semibold text-xs uppercase tracking-widest px-7 py-3 hover:bg-red-600 hover:text-white transition-colors">
-              Read Story
-            </Link>
-            <span className="text-stone-400 text-sm">{hero && formatDate(hero.date)}</span>
-            <div className="flex gap-2">
-              {hero?.categories.slice(0,2).map(c => (
-                <span key={c} className="text-xs text-stone-400 uppercase tracking-wider">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Stats — top right */}
-        <div className="absolute top-20 right-8 md:right-16 hidden lg:flex flex-col gap-5 text-right">
-          {[['54', 'Countries'], ['6', 'Continents'], ['72', 'Stories']].map(([n, l]) => (
+        <div style={S.heroOverlay} />
+        {/* Stats */}
+        <div style={{position:'absolute', top:80, right:64, display:'flex', flexDirection:'column', gap:20, textAlign:'right'}}>
+          {[['54','Countries'],['6','Continents'],['72','Stories']].map(([n,l])=>(
             <div key={l}>
-              <div className="serif text-4xl font-light text-white">{n}</div>
-              <div className="eyebrow text-stone-400 mt-0.5">{l}</div>
+              <div className="serif" style={{fontSize:'2.8rem', fontWeight:300, color:'#fff'}}>{n}</div>
+              <div style={{...S.eyebrow, color:'#8a8480', marginTop:2}}>{l}</div>
             </div>
           ))}
         </div>
+        <div style={S.heroContent}>
+          <p style={{...S.eyebrow, color:'#e88', marginBottom:16}}>Latest Story</p>
+          <h1 style={S.heroTitle}>{hero?.title}</h1>
+          <div style={{display:'flex', alignItems:'center', gap:24}}>
+            <Link href={`/blog/${hero?.slug}`} style={S.heroBtn}>Read Story</Link>
+            <span style={{color:'#8a8480', fontSize:'0.85rem'}}>{hero && formatDate(hero.date)}</span>
+            {hero?.categories.slice(0,2).map(c=>(
+              <span key={c} style={{fontSize:'0.7rem', color:'#8a8480', textTransform:'uppercase', letterSpacing:'0.1em'}}>{c}</span>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* ─── TWO-COLUMN SPLIT ────────────────────────── */}
-      <section className="max-w-screen-xl mx-auto px-8 py-16">
-        <div className="flex items-center gap-4 mb-10">
-          <p className="eyebrow">Recent Adventures</p>
-          <div className="flex-1 h-px bg-stone-200" />
-          <Link href="/blog" className="eyebrow text-stone-400 hover:text-red-600 transition-colors">All Posts →</Link>
+      {/* FEATURED 2-COL */}
+      <div style={S.section}>
+        <div style={S.divider}>
+          <span style={S.dividerText}>Recent Adventures</span>
+          <div style={S.dividerLine} />
+          <Link href="/blog" style={{...S.eyebrow, color:'#9a9490', textDecoration:'none'}}>All Posts →</Link>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div style={S.grid2}>
           {featured.map(post => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="card group block">
-              <div className="relative h-72 zoom-wrap bg-stone-200">
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="hover-card" style={S.card}>
+              <div style={S.cardImg} className="zoom-wrap">
                 {post.coverImage
-                  ? <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="(max-width:768px)100vw,50vw" />
-                  : <div className="w-full h-full bg-stone-300" />}
-                <div className="absolute inset-0" style={{background:'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)'}} />
-                <div className="absolute bottom-4 left-4">
-                  <span className="eyebrow text-red-300">{post.categories[0]}</span>
+                  ? <Image src={post.coverImage} alt={post.title} fill sizes="50vw" style={{objectFit:'cover'}} />
+                  : <div style={{width:'100%',height:'100%',background:'#c8bfb0'}} />}
+                <div style={S.imgOverlay} />
+                <div style={{position:'absolute', bottom:12, left:16}}>
+                  <span style={{...S.cardEye, color:'#ffb3a7'}}>{post.categories[0]}</span>
                 </div>
               </div>
-              <div className="p-6">
-                <p className="text-xs text-stone-400 mb-2">{formatDate(post.date)}</p>
-                <h2 className="serif text-2xl font-light leading-snug text-stone-900 group-hover:text-red-700 transition-colors mb-3">{post.title}</h2>
-                <p className="text-sm text-stone-500 leading-relaxed line-clamp-2">{getExcerpt(post, 130)}</p>
+              <div style={S.cardBody}>
+                <p style={S.cardDate}>{formatDate(post.date)}</p>
+                <h2 style={S.cardTitle}>{post.title}</h2>
+                <p style={S.cardExcerpt}>{getExcerpt(post, 130)}</p>
               </div>
             </Link>
           ))}
         </div>
-      </section>
+      </div>
 
-      {/* ─── EDITORIAL GRID ─────────────────────────── */}
-      <section style={{background:'#f5f0e8'}} className="py-16">
-        <div className="max-w-screen-xl mx-auto px-8">
-          <div className="flex items-center gap-4 mb-10">
-            <p className="eyebrow">More Stories</p>
-            <div className="flex-1 h-px bg-stone-300" />
+      {/* GRID */}
+      <div style={S.sectionAlt}>
+        <div style={S.sectionAltInner}>
+          <div style={S.divider}>
+            <span style={S.dividerText}>More Stories</span>
+            <div style={S.dividerLine} />
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div style={S.grid3}>
             {grid.map(post => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="card group block">
-                <div className="relative h-52 zoom-wrap bg-stone-200">
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="hover-card" style={S.card}>
+                <div style={S.cardImgSm} className="zoom-wrap">
                   {post.coverImage
-                    ? <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="33vw" />
-                    : <div className="w-full h-full bg-stone-300" />}
+                    ? <Image src={post.coverImage} alt={post.title} fill sizes="33vw" style={{objectFit:'cover'}} />
+                    : <div style={{width:'100%',height:'100%',background:'#c8bfb0'}} />}
                 </div>
-                <div className="p-5">
-                  <p className="eyebrow mb-2">{post.categories[0]}</p>
-                  <h3 className="serif text-xl font-light text-stone-900 group-hover:text-red-700 transition-colors leading-snug mb-2">{post.title}</h3>
-                  <p className="text-xs text-stone-400">{formatDate(post.date)}</p>
+                <div style={S.cardBody}>
+                  <p style={S.cardEye}>{post.categories[0] || 'Travel'}</p>
+                  <h3 style={S.cardTitleSm}>{post.title}</h3>
+                  <p style={S.cardDate}>{formatDate(post.date)}</p>
                 </div>
               </Link>
             ))}
           </div>
-          <div className="text-center mt-12">
-            <Link href="/blog" className="inline-block border border-stone-800 text-stone-800 font-semibold text-xs uppercase tracking-widest px-10 py-4 hover:bg-stone-800 hover:text-white transition-colors">
-              View All {posts.length} Posts
-            </Link>
+          <div style={S.viewAll}>
+            <Link href="/blog" style={S.viewAllBtn}>View All {posts.length} Posts</Link>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ─── QUOTE ──────────────────────────────────── */}
-      <section className="py-24 px-8 text-center" style={{background:'#1a1714'}}>
-        <p className="serif text-4xl md:text-6xl font-light italic text-white leading-tight max-w-4xl mx-auto" style={{color:'#f5f0e8'}}>
-          "Life is only limited by the opportunities you decide not to take."
-        </p>
-        <div className="w-12 h-px bg-red-600 mx-auto mt-8" />
-        <p className="eyebrow text-stone-500 mt-4">Impulse Odyssey</p>
-      </section>
+      {/* QUOTE */}
+      <div style={S.quote}>
+        <p style={S.quoteText}>"Life is only limited by the opportunities you decide not to take."</p>
+        <div style={{width:40, height:1, background:'#c8392b', margin:'32px auto 0'}} />
+        <p style={{...S.eyebrow, color:'#4a4540', marginTop:12}}>Impulse Odyssey</p>
+      </div>
 
-      {/* ─── DESTINATION CATEGORIES ─────────────────── */}
-      <section className="py-16 px-8 max-w-screen-xl mx-auto">
-        <div className="flex items-center gap-4 mb-10">
-          <p className="eyebrow">Explore by Destination</p>
-          <div className="flex-1 h-px bg-stone-200" />
+      {/* DESTINATIONS */}
+      <div style={S.section}>
+        <div style={S.divider}>
+          <span style={S.dividerText}>Explore by Destination</span>
+          <div style={S.dividerLine} />
         </div>
-        <div className="flex flex-wrap gap-3">
-          {['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Travel Guides', 'Travel Tips', 'Featured'].map(cat => (
-            <Link key={cat} href={`/blog?category=${encodeURIComponent(cat)}`}
-              className="text-xs uppercase tracking-widest font-semibold px-5 py-2.5 border border-stone-300 text-stone-600 hover:border-red-600 hover:text-red-600 transition-colors">
-              {cat}
-            </Link>
+        <div style={S.catRow}>
+          {['Africa','Asia','Europe','North America','South America','Oceania','Travel Guides','Travel Tips','Featured'].map(cat=>(
+            <Link key={cat} href={`/blog?category=${encodeURIComponent(cat)}`} style={S.catBtn}>{cat}</Link>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   )
 }

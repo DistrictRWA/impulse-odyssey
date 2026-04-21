@@ -1,99 +1,81 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f9f6f0;
+    color: #1a1714;
+    -webkit-font-smoothing: antialiased;
+  }
 
-:root {
-  --sand: #f5f0e8;
-  --ink: #1a1714;
-  --accent: #c8392b;
-  --gold: #c9a84c;
-  --warm: #f9f6f0;
+  .prose-travel {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #2a2520;
+  }
+  .prose-travel p { margin-bottom: 1.7em; }
+  .prose-travel h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin: 2.5em 0 0.8em;
+    color: #1a1714;
+    line-height: 1.25;
+  }
+  .prose-travel h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 2em 0 0.6em;
+    color: #1a1714;
+  }
+  .prose-travel img {
+    width: 100%;
+    border-radius: 4px;
+    margin: 2.5em 0;
+    display: block;
+  }
+  .prose-travel a { color: #c8392b; text-underline-offset: 3px; }
+  .prose-travel ul, .prose-travel ol { margin: 0 0 1.7em 1.4em; }
+  .prose-travel li { margin-bottom: 0.6em; }
+  .prose-travel blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: #666;
+    border-left: 3px solid #c9a84c;
+    padding: 0.5em 0 0.5em 1.5em;
+    margin: 2em 0;
+  }
+  .prose-travel strong { color: #1a1714; }
+
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+  .eyebrow {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .zoom-wrap { overflow: hidden; }
+  .zoom-wrap img { transition: transform 0.7s cubic-bezier(.4,0,.2,1); will-change: transform; }
+  .zoom-wrap:hover img { transform: scale(1.06); }
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--warm);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  font-size: 15px;
+@layer base {
+  .hover-card {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    display: block;
+  }
+  .hover-card:hover {
+    box-shadow: 0 16px 48px rgba(0,0,0,0.13);
+    transform: translateY(-4px);
+  }
+  .hover-lift:hover {
+    box-shadow: 0 12px 36px rgba(0,0,0,0.11);
+    transform: translateY(-3px);
+  }
 }
-
-.serif { font-family: 'Cormorant Garamond', Georgia, serif; }
-
-/* Smooth image zoom */
-.zoom-wrap { overflow: hidden; }
-.zoom-wrap img { transition: transform 0.7s cubic-bezier(.4,0,.2,1); }
-.zoom-wrap:hover img { transform: scale(1.07); }
-
-/* Card shadow */
-.card {
-  background: #fff;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-.card:hover {
-  box-shadow: 0 12px 40px rgba(0,0,0,0.13);
-  transform: translateY(-3px);
-}
-
-/* Post reading styles */
-.prose-travel {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.05rem;
-  line-height: 1.9;
-  color: #2a2520;
-}
-.prose-travel p { margin-bottom: 1.7em; }
-.prose-travel h2 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 2.5em 0 0.8em;
-  color: var(--ink);
-  line-height: 1.25;
-}
-.prose-travel h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 2em 0 0.6em;
-  color: var(--ink);
-}
-.prose-travel img {
-  width: 100%;
-  border-radius: 4px;
-  margin: 2.5em 0;
-  display: block;
-}
-.prose-travel a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.prose-travel ul, .prose-travel ol { margin: 0 0 1.7em 1.4em; }
-.prose-travel li { margin-bottom: 0.6em; }
-.prose-travel blockquote {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
-  font-style: italic;
-  line-height: 1.5;
-  color: #555;
-  border-left: 3px solid var(--gold);
-  padding: 0.5em 0 0.5em 1.5em;
-  margin: 2em 0;
-}
-.prose-travel strong { color: var(--ink); }
-
-/* Label / eyebrow */
-.eyebrow {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/* Thin rule */
-.rule { border: none; border-top: 1px solid #e0d9ce; }

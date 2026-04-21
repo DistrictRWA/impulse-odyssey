@@ -8,70 +8,57 @@ export default function BlogPage({ searchParams }: { searchParams: { category?: 
   const active = searchParams.category || ''
   const posts = active ? allPosts.filter(p => p.categories.includes(active)) : allPosts
   const [hero, ...rest] = posts
+  const serif = "'Cormorant Garamond', Georgia, serif"
+  const ey: React.CSSProperties = { fontSize:'0.65rem', fontWeight:600, letterSpacing:'0.15em', textTransform:'uppercase' }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="py-20 text-center border-b border-stone-200 bg-white">
-        <p className="eyebrow mb-4">{active || 'The Journal'}</p>
-        <h1 className="serif text-6xl font-light" style={{color:'#1a1714'}}>
-          {active || 'All Stories'}
-        </h1>
-        <p className="text-stone-400 text-sm mt-4 tracking-wide">{posts.length} stories</p>
+    <div style={{background:'#f9f6f0', minHeight:'100vh'}}>
+      <div style={{background:'#fff', borderBottom:'1px solid #e8e2d9', padding:'72px 0 48px', textAlign:'center'}}>
+        <p style={{...ey, color:'#c8392b', marginBottom:16}}>{active || 'The Journal'}</p>
+        <h1 style={{fontFamily:serif, fontSize:'clamp(2.5rem,6vw,4.5rem)', fontWeight:300, color:'#1a1714'}}>{active || 'All Stories'}</h1>
+        <p style={{fontSize:'0.8rem', color:'#9a9490', marginTop:12}}>{posts.length} stories</p>
       </div>
 
-      {/* Category nav */}
-      <div className="bg-white border-b border-stone-100 sticky top-14 z-30 overflow-x-auto">
-        <div className="max-w-screen-xl mx-auto px-8 py-3 flex gap-2">
-          <Link href="/blog"
-            className={`shrink-0 text-xs uppercase tracking-widest font-semibold px-4 py-2 transition-colors ${!active ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-red-600'}`}>
-            All
-          </Link>
-          {categories.map(c => (
-            <Link key={c} href={`/blog?category=${encodeURIComponent(c)}`}
-              className={`shrink-0 text-xs uppercase tracking-widest font-semibold px-4 py-2 whitespace-nowrap transition-colors ${active === c ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-red-600'}`}>
-              {c}
+      <div style={{background:'#fff', borderBottom:'1px solid #e8e2d9', position:'sticky', top:56, zIndex:30, overflowX:'auto'}}>
+        <div style={{maxWidth:1280, margin:'0 auto', padding:'8px 64px', display:'flex', gap:4}}>
+          {[{label:'All', val:''}, ...categories.map(c=>({label:c, val:c}))].map(({label, val})=>(
+            <Link key={label} href={val ? `/blog?category=${encodeURIComponent(val)}` : '/blog'}
+              style={{whiteSpace:'nowrap', fontSize:'0.65rem', fontWeight:600, letterSpacing:'0.12em', textTransform:'uppercase', padding:'8px 16px', textDecoration:'none', background: active===val ? '#1a1714' : 'transparent', color: active===val ? '#fff' : '#6b6560'}}>
+              {label}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="max-w-screen-xl mx-auto px-8 py-14">
-        {/* Hero post */}
+      <div style={{maxWidth:1280, margin:'0 auto', padding:'64px'}}>
         {hero && (
-          <Link href={`/blog/${hero.slug}`} className="group block mb-14">
-            <div className="relative rounded-sm overflow-hidden zoom-wrap bg-stone-200" style={{height: '60vh', minHeight: 400}}>
-              {hero.coverImage
-                ? <Image src={hero.coverImage} alt={hero.title} fill className="object-cover" style={{opacity:.75}} priority sizes="100vw" />
-                : <div className="w-full h-full bg-stone-300" />}
-              <div className="absolute inset-0" style={{background:'linear-gradient(to top, rgba(26,23,20,0.9) 0%, transparent 55%)'}} />
-              <div className="absolute bottom-0 left-0 right-0 p-10">
-                <p className="eyebrow text-red-400 mb-3">{hero.categories[0]}</p>
-                <h2 className="serif text-5xl font-light text-white leading-tight max-w-3xl group-hover:text-stone-200 transition-colors mb-3">
-                  {hero.title}
-                </h2>
-                <p className="text-stone-400 text-sm">{formatDate(hero.date)} · By Alex</p>
+          <Link href={`/blog/${hero.slug}`} style={{display:'block', marginBottom:56, textDecoration:'none'}}>
+            <div style={{position:'relative', height:'60vh', minHeight:400, background:'#1a1714', borderRadius:4, overflow:'hidden'}}>
+              {hero.coverImage && <Image src={hero.coverImage} alt={hero.title} fill priority sizes="100vw" style={{objectFit:'cover', opacity:0.65}} />}
+              <div style={{position:'absolute', inset:0, background:'linear-gradient(to top, rgba(26,23,20,0.92) 0%, transparent 55%)'}} />
+              <div style={{position:'absolute', bottom:0, left:0, right:0, padding:48}}>
+                <p style={{...ey, color:'#e88', marginBottom:12}}>{hero.categories[0]}</p>
+                <h2 style={{fontFamily:serif, fontSize:'clamp(2rem,5vw,3.5rem)', fontWeight:300, color:'#fff', lineHeight:1.15, maxWidth:800, marginBottom:12}}>{hero.title}</h2>
+                <p style={{fontSize:'0.8rem', color:'#8a8480'}}>{formatDate(hero.date)} · By Alex</p>
               </div>
             </div>
           </Link>
         )}
 
-        {/* Grid */}
-        <div className="grid md:grid-cols-3 gap-7">
+        <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:24}}>
           {rest.map(post => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="card group block">
-              <div className="relative h-56 zoom-wrap bg-stone-200">
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="hover-card"
+              style={{background:'#fff', borderRadius:4, overflow:'hidden', textDecoration:'none', display:'flex', flexDirection:'column'}}>
+              <div style={{position:'relative', height:220, background:'#c8bfb0', overflow:'hidden'}}>
                 {post.coverImage
-                  ? <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="33vw" />
-                  : <div className="w-full h-full bg-stone-300" />}
+                  ? <Image src={post.coverImage} alt={post.title} fill sizes="33vw" style={{objectFit:'cover'}} />
+                  : <div style={{width:'100%', height:'100%', background:'#c8bfb0'}} />}
               </div>
-              <div className="p-5">
-                <p className="eyebrow mb-2">{post.categories[0] || 'Travel'}</p>
-                <h2 className="serif text-xl font-light text-stone-900 group-hover:text-red-700 transition-colors leading-snug mb-3">
-                  {post.title}
-                </h2>
-                <p className="text-sm text-stone-500 line-clamp-2 leading-relaxed">{getExcerpt(post, 110)}</p>
-                <p className="text-xs text-stone-400 mt-3">{formatDate(post.date)}</p>
+              <div style={{padding:24, display:'flex', flexDirection:'column', flex:1}}>
+                <p style={{fontSize:'0.6rem', fontWeight:600, letterSpacing:'0.15em', textTransform:'uppercase', color:'#c8392b', marginBottom:8}}>{post.categories[0]||'Travel'}</p>
+                <h2 style={{fontFamily:serif, fontSize:'1.25rem', fontWeight:400, color:'#1a1714', lineHeight:1.35, marginBottom:10, flex:1}}>{post.title}</h2>
+                <p style={{fontSize:'0.8rem', color:'#8a8480', lineHeight:1.6, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden', marginBottom:12}}>{getExcerpt(post,110)}</p>
+                <p style={{fontSize:'0.7rem', color:'#b0a89e'}}>{formatDate(post.date)}</p>
               </div>
             </Link>
           ))}
