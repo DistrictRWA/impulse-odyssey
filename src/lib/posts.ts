@@ -9,6 +9,7 @@ export interface Post {
   slug: string
   categories: string[]
   thumbnail_id: string | null
+  coverImage: string | null
 }
 
 let _posts: Post[] | null = null
@@ -18,7 +19,6 @@ export function getAllPosts(): Post[] {
   const filePath = path.join(process.cwd(), 'src/data/posts.json')
   const raw = fs.readFileSync(filePath, 'utf-8')
   _posts = JSON.parse(raw) as Post[]
-  // Sort newest first
   _posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   return _posts
 }
@@ -35,6 +35,10 @@ export function getAllCategories(): string[] {
 }
 
 export function formatDate(dateStr: string): string {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+export function getExcerpt(post: Post, length = 140): string {
+  const text = (post.excerpt || post.content).replace(/<[^>]+>/g, '').trim()
+  return text.length > length ? text.slice(0, length) + '...' : text
 }
