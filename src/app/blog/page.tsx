@@ -5,90 +5,73 @@ import { getAllPosts, getAllCategories, formatDate, getExcerpt } from '@/lib/pos
 export default function BlogPage({ searchParams }: { searchParams: { category?: string } }) {
   const allPosts = getAllPosts()
   const categories = getAllCategories()
-  const activeCategory = searchParams.category || ''
-  const posts = activeCategory ? allPosts.filter(p => p.categories.includes(activeCategory)) : allPosts
-  const [heroPost, ...rest] = posts
+  const active = searchParams.category || ''
+  const posts = active ? allPosts.filter(p => p.categories.includes(active)) : allPosts
+  const [hero, ...rest] = posts
 
   return (
     <div className="min-h-screen">
-      {/* Page header */}
-      <div className="bg-gray-950 text-white py-20 px-6 text-center">
-        <p className="text-red-400 text-xs font-bold uppercase tracking-widest mb-3">Impulse Odyssey</p>
-        <h1 className="font-serif text-5xl md:text-6xl font-bold mb-4">
-          {activeCategory || 'The Blog'}
+      {/* Header */}
+      <div className="py-20 text-center border-b border-stone-200 bg-white">
+        <p className="eyebrow mb-4">{active || 'The Journal'}</p>
+        <h1 className="serif text-6xl font-light" style={{color:'#1a1714'}}>
+          {active || 'All Stories'}
         </h1>
-        <p className="text-gray-400 text-sm">{posts.length} stories from around the world</p>
+        <p className="text-stone-400 text-sm mt-4 tracking-wide">{posts.length} stories</p>
       </div>
 
-      {/* Category filter */}
-      <div className="bg-white border-b border-gray-100 sticky top-16 z-40 overflow-x-auto">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex gap-2">
+      {/* Category nav */}
+      <div className="bg-white border-b border-stone-100 sticky top-14 z-30 overflow-x-auto">
+        <div className="max-w-screen-xl mx-auto px-8 py-3 flex gap-2">
           <Link href="/blog"
-            className={`shrink-0 text-xs font-bold uppercase tracking-widest px-5 py-2 rounded-full transition-colors ${!activeCategory ? 'bg-red-500 text-white' : 'border border-gray-200 text-gray-500 hover:border-red-400 hover:text-red-500'}`}>
+            className={`shrink-0 text-xs uppercase tracking-widest font-semibold px-4 py-2 transition-colors ${!active ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-red-600'}`}>
             All
           </Link>
-          {categories.map(cat => (
-            <Link key={cat} href={`/blog?category=${encodeURIComponent(cat)}`}
-              className={`shrink-0 text-xs font-bold uppercase tracking-widest px-5 py-2 rounded-full border transition-colors whitespace-nowrap ${activeCategory === cat ? 'bg-red-500 border-red-500 text-white' : 'border-gray-200 text-gray-500 hover:border-red-400 hover:text-red-500'}`}>
-              {cat}
+          {categories.map(c => (
+            <Link key={c} href={`/blog?category=${encodeURIComponent(c)}`}
+              className={`shrink-0 text-xs uppercase tracking-widest font-semibold px-4 py-2 whitespace-nowrap transition-colors ${active === c ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-red-600'}`}>
+              {c}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-14">
+      <div className="max-w-screen-xl mx-auto px-8 py-14">
         {/* Hero post */}
-        {heroPost && (
-          <Link href={`/blog/${heroPost.slug}`} className="group block mb-14">
-            <div className="relative h-[55vh] rounded-3xl overflow-hidden img-zoom bg-gray-900">
-              {heroPost.coverImage ? (
-                <Image src={heroPost.coverImage} alt={heroPost.title} fill className="object-cover opacity-75" unoptimized />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-700" />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        {hero && (
+          <Link href={`/blog/${hero.slug}`} className="group block mb-14">
+            <div className="relative rounded-sm overflow-hidden zoom-wrap bg-stone-200" style={{height: '60vh', minHeight: 400}}>
+              {hero.coverImage
+                ? <Image src={hero.coverImage} alt={hero.title} fill className="object-cover" style={{opacity:.75}} priority sizes="100vw" />
+                : <div className="w-full h-full bg-stone-300" />}
+              <div className="absolute inset-0" style={{background:'linear-gradient(to top, rgba(26,23,20,0.9) 0%, transparent 55%)'}} />
               <div className="absolute bottom-0 left-0 right-0 p-10">
-                <div className="flex gap-2 mb-4">
-                  {heroPost.categories.slice(0, 2).map(c => (
-                    <span key={c} className="cat-pill">{c}</span>
-                  ))}
-                </div>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight max-w-3xl group-hover:text-red-300 transition-colors mb-3">
-                  {heroPost.title}
+                <p className="eyebrow text-red-400 mb-3">{hero.categories[0]}</p>
+                <h2 className="serif text-5xl font-light text-white leading-tight max-w-3xl group-hover:text-stone-200 transition-colors mb-3">
+                  {hero.title}
                 </h2>
-                <p className="text-gray-300 text-sm">{formatDate(heroPost.date)} · By Alex</p>
+                <p className="text-stone-400 text-sm">{formatDate(hero.date)} · By Alex</p>
               </div>
             </div>
           </Link>
         )}
 
-        {/* Posts grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+        {/* Grid */}
+        <div className="grid md:grid-cols-3 gap-7">
           {rest.map(post => (
-            <Link key={post.slug} href={`/blog/${post.slug}`}
-              className="group bg-white rounded-2xl overflow-hidden shadow-sm card-hover flex flex-col">
-              <div className="relative h-52 img-zoom bg-gray-900">
-                {post.coverImage ? (
-                  <Image src={post.coverImage} alt={post.title} fill className="object-cover" unoptimized />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-600" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-3 left-3">
-                  {post.categories.slice(0, 1).map(c => (
-                    <span key={c} className="cat-pill">{c}</span>
-                  ))}
-                </div>
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="card group block">
+              <div className="relative h-56 zoom-wrap bg-stone-200">
+                {post.coverImage
+                  ? <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="33vw" />
+                  : <div className="w-full h-full bg-stone-300" />}
               </div>
-              <div className="p-6 flex flex-col flex-1">
-                <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">{formatDate(post.date)}</p>
-                <h2 className="font-serif text-lg font-bold text-gray-900 group-hover:text-red-500 transition-colors leading-snug mb-3 flex-1">
+              <div className="p-5">
+                <p className="eyebrow mb-2">{post.categories[0] || 'Travel'}</p>
+                <h2 className="serif text-xl font-light text-stone-900 group-hover:text-red-700 transition-colors leading-snug mb-3">
                   {post.title}
                 </h2>
-                <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">{getExcerpt(post, 110)}</p>
-                <div className="mt-4 text-xs font-bold text-red-500 uppercase tracking-wide flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Read More <span>→</span>
-                </div>
+                <p className="text-sm text-stone-500 line-clamp-2 leading-relaxed">{getExcerpt(post, 110)}</p>
+                <p className="text-xs text-stone-400 mt-3">{formatDate(post.date)}</p>
               </div>
             </Link>
           ))}
